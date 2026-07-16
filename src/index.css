@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #e6a8d7;
+  --color-primary-light: #fbebf6;
+  --color-primary-dark: #cc74b6;
+  
+  --color-secondary: #f4c2c2;
+  --color-secondary-dark: #dca3a3;
+
+  --color-accent: #c8a2c8;
+  
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9f9f9;
+  
+  --color-text-main: #333333;
+  --color-text-muted: #666666;
+
+  --font-sans: 'Montserrat', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-muted text-text-main antialiased font-sans;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-xl;
+  }
+}
