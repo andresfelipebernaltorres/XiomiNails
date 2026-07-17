@@ -1,21 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #e6a8d7;
-  --color-primary-light: #fbebf6;
-  --color-primary-dark: #cc74b6;
-  
-  --color-secondary: #f4c2c2;
-  --color-secondary-dark: #dca3a3;
+  /* Gold — Principal */
+  --color-primary: #c4a35a;
+  --color-primary-light: #f5f0e3;
+  --color-primary-dark: #a68832;
 
-  --color-accent: #c8a2c8;
-  
+  /* Lila — Acento */
+  --color-accent: #9b7fbf;
+  --color-accent-light: #ece5f3;
+  --color-accent-dark: #7a5fa0;
+
+  /* Superficies */
   --color-surface: #ffffff;
-  --color-surface-muted: #f9f9f9;
-  
-  --color-text-main: #333333;
-  --color-text-muted: #666666;
+  --color-surface-muted: #fafafa;
+  --color-surface-dark: #1a1a1a;
 
+  /* Texto */
+  --color-text-main: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-text-light: #9a9a9a;
+
+  /* Tipografía */
   --font-sans: 'Montserrat', sans-serif;
   --font-serif: 'Playfair Display', serif;
 }
@@ -28,6 +34,28 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-xl;
+    @apply bg-white/90 backdrop-blur-xl border border-gray-200/60 shadow-xl;
+  }
+
+  .glass-panel-dark {
+    @apply bg-surface-dark/95 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .btn-glow {
+    animation: btnGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes btnGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(196, 163, 90, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(196, 163, 90, 0.6), 0 0 40px rgba(196, 163, 90, 0.2); }
+  }
+
+  .btn-pulse {
+    animation: btnPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes btnPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
   }
 }
