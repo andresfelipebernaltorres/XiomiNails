@@ -113,13 +113,19 @@
   .btn-gold {
     @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary text-ink font-bold
       px-8 py-4 text-sm tracking-wide shadow-[0_10px_40px_rgba(212,175,55,0.28)]
-      hover:bg-primary-dark hover:scale-105 active:scale-[0.98] transition-luxury cursor-pointer;
+      hover:bg-primary-dark hover:scale-105 active:scale-[0.98] cursor-pointer;
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease-luxury);
   }
 
   .btn-outline-ivory {
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-ivory/30
       bg-transparent px-8 py-4 text-sm font-semibold text-ivory
-      hover:bg-ivory/10 hover:border-ivory/50 transition-luxury cursor-pointer;
+      hover:bg-ivory/10 hover:border-ivory/50 cursor-pointer;
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease-luxury);
   }
 
   .text-balance-luxury {
@@ -140,9 +146,11 @@
   }
 
   .nav-luxury-link {
-    @apply relative py-1 text-sm font-semibold tracking-wide text-text-muted
-      transition-luxury cursor-pointer;
+    @apply relative py-1 text-sm font-semibold tracking-wide text-text-muted cursor-pointer;
     letter-spacing: 0.02em;
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease-luxury);
   }
 
   .nav-luxury-link::after {
