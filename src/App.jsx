@@ -11,6 +11,14 @@ import { db } from './firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { formatPrice, formatDuration } from './data/services';
 
+const NAV_ITEMS = [
+  { label: 'Inicio', id: 'inicio' },
+  { label: 'Servicios', id: 'servicios' },
+  { label: 'Nosotras', id: 'nosotras' },
+  { label: 'Testimonios', id: 'testimonios' },
+  { label: 'Contacto', id: 'contacto' },
+];
+
 function App() {
   const [view, setView] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,6 +94,7 @@ function App() {
     setIsConfirmed(false);
     setStep(1);
     setView('booking');
+    setMobileMenuOpen(false);
   };
 
   const navigateToSection = (sectionId) => {
@@ -93,11 +102,25 @@ function App() {
     setIsConfirmed(false);
     setMobileMenuOpen(false);
     setTimeout(() => {
+      if (sectionId === 'inicio') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
+  };
+
+  const handleNavClick = (item) => {
+    if (item.id === 'inicio') {
+      setView('home');
+      setMobileMenuOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    navigateToSection(item.id);
   };
 
   const handleTimeError = (message) => {
@@ -109,96 +132,100 @@ function App() {
   const isStep3Ready = clientData.name.trim() && clientData.phone.trim();
 
   return (
-    <div className="min-h-screen flex flex-col relative pb-12">
+    <div className="min-h-screen flex flex-col relative pb-12 page-shell">
 
-      {/* Header */}
-      <header className="w-full px-6 md:px-8 py-4 flex items-center justify-between bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm sticky top-0 z-50 transition-all duration-300">
-        {/* Brand Logo */}
-        <div 
-          onClick={handleLogoClick}
-          className="group flex items-center gap-3 cursor-pointer"
-        >
-          <div className="w-10 h-10 rounded-xl bg-surface-dark flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
-            <Sparkles className="w-5 h-5 text-primary" />
-          </div>
-          <span className="font-black font-serif text-2xl tracking-tight text-surface-dark group-hover:opacity-80 transition-opacity">
-            XiomiNails
-          </span>
-        </div>
+      {/* ── Header luxury ── */}
+      <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/90 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-luxury">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 md:px-8 md:py-5">
+          {/* Brand */}
+          <button
+            type="button"
+            onClick={handleLogoClick}
+            className="group flex items-center gap-3 cursor-pointer"
+            aria-label="XiomiNails — ir al inicio"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-surface-dark shadow-md transition-transform duration-300 group-hover:scale-105">
+              <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <span className="font-serif text-[1.65rem] font-semibold tracking-tight text-surface-dark transition-opacity group-hover:opacity-80">
+              XiomiNails
+            </span>
+          </button>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-text-muted">
-          {[
-            { label: 'Inicio', action: () => { setView('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
-            { label: 'Servicios', action: () => navigateToSection('servicios') },
-            { label: 'Nosotras', action: () => navigateToSection('nosotras') },
-            { label: 'Testimonios', action: () => navigateToSection('testimonios') },
-            { label: 'Contacto', action: () => navigateToSection('contacto') },
-          ].map(item => (
+          {/* Desktop nav — más espacio entre enlaces */}
+          <nav className="nav-luxury hidden gap-10 lg:gap-12 md:flex" aria-label="Navegación principal">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleNavClick(item)}
+                className="nav-luxury-link"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* CTA separado + menú móvil */}
+          <div className="flex items-center gap-3 sm:gap-5">
+            <div className="hidden h-6 w-px bg-gray-200 md:block" aria-hidden="true" />
+
             <button
-              key={item.label}
-              onClick={item.action}
-              className="hover:text-surface-dark transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary hover:after:w-full after:transition-all after:duration-300"
+              type="button"
+              onClick={handleStartBooking}
+              aria-label="Agendar cita"
+              className="inline-flex items-center gap-2 rounded-full bg-surface-dark px-4 py-2.5 text-xs font-bold text-white shadow-md transition-luxury hover:scale-105 hover:bg-primary hover:text-surface-dark sm:px-6 sm:text-sm cursor-pointer"
             >
-              {item.label}
+              <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+              Agendar Cita
             </button>
-          ))}
-        </nav>
 
-        {/* Action Button + Mobile Menu */}
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleStartBooking}
-            className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-surface-dark text-white font-bold hover:bg-primary hover:text-surface-dark transition-all duration-300 text-sm shadow-md cursor-pointer"
-          >
-            <CalendarIcon className="w-4 h-4" />
-            Agendar Cita
-          </button>
-
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-text-main hover:text-primary-dark transition-colors cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="rounded-full p-2 text-text-main transition-colors hover:bg-black/5 hover:text-primary-dark md:hidden cursor-pointer"
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Drawer */}
+        {/* Mobile drawer — solo enlaces; CTA ya visible arriba */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.nav
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-full left-0 w-full bg-white/98 backdrop-blur-md border-b border-gray-100 shadow-xl p-6 flex flex-col gap-4 text-sm font-semibold text-text-muted md:hidden"
+              id="mobile-nav"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden border-t border-gray-100 bg-white/98 backdrop-blur-md md:hidden"
+              aria-label="Menú móvil"
             >
-              {['Inicio', 'Servicios', 'Nosotras', 'Testimonios', 'Contacto'].map((label, i) => (
-                <button
-                  key={label}
-                  onClick={() => {
-                    if (label === 'Inicio') { setView('home'); setMobileMenuOpen(false); }
-                    else { navigateToSection(label.toLowerCase()); }
-                  }}
-                  className={`text-left py-1 hover:text-surface-dark transition-colors cursor-pointer ${i > 0 ? 'border-t border-gray-50 pt-3' : ''}`}
-                >
-                  {label}
-                </button>
-              ))}
-              <button
-                onClick={() => { handleStartBooking(); setMobileMenuOpen(false); }}
-                className="w-full py-3 mt-2 rounded-full bg-surface-dark text-white font-bold text-center hover:bg-primary hover:text-surface-dark transition-all cursor-pointer shadow-md"
-              >
-                Agendar Cita
-              </button>
+              <div className="flex flex-col gap-1 px-5 py-4">
+                {NAV_ITEMS.map((item, i) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleNavClick(item)}
+                    className={`py-3 text-left text-sm font-semibold text-text-muted transition-luxury hover:text-surface-dark cursor-pointer ${
+                      i > 0 ? 'border-t border-gray-50' : ''
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </motion.nav>
           )}
         </AnimatePresence>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 py-12 relative z-10 w-full">
+      {/* Main Content — ancho editorial ampliado para el banner split */}
+      <main className="max-w-6xl mx-auto px-4 py-10 md:py-12 relative z-10 w-full">
         <AnimatePresence mode="wait">
           {view === 'admin' ? (
             <motion.div key="admin" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }}>
